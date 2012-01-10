@@ -1,0 +1,4 @@
+importFrom(irtoys, est)
+export(CopyDetect1,CopyDetect2)
+S3method(print,CopyDetect)
+S3method(print,CopyDetect2)

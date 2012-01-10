@@ -1,0 +1,12 @@
+15c1c348c68ef7b2e603d8cca1c06ae9 *DESCRIPTION
+4b2bbf871b2871d0576af9896567dd28 *NAMESPACE
+65c68df5ec924b34a8340fef3dc436c2 *R/CopyDetect1.r
+2f055c251bc1b85bcf849a3711eb19ea *R/CopyDetect2.r
+131b8586d48e89aaf831dcc1f1e133eb *R/print.CopyDetect.r
+ffd972f29e1c3864d1061e5e4cc547b7 *R/print.CopyDetect2.r
+056ac47d03c4ff66c66c4b491d953722 *data/ipar.RData
+f94c4e1d8b2a69ce1d2ce6750d9a8ca6 *data/simulated.data.RData
+c306065cef86c9e9f3ceaef2bc87d5ac *man/CopyDetect1.Rd
+815151ba7668c362a162c73e83b683db *man/CopyDetect2.Rd
+fc7d0453efcd1e35eb8216193f8e0d44 *man/ipar.Rd
+ca6f072c64e644f6421107b9cfec09fd *man/simulated.data.Rd
