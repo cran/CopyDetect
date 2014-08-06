@@ -1,0 +1,15 @@
+CopyDetect_1.1 (2014-08-06)
+
+  * A small computational error for the S2 index is fixed
+
+  * An adjustment in the omega index was made to avoid possible problem when missing data occurs in response vectors.
+    Now, it can handle both scenarios: 
+      1) Missing data in response vectors are read as "NA",
+      2) Missing data in response vectors are read as system missing in R
+
+  * An error was fixed for print.CopyDetect2 function, an internal function to be used for printing the CopyDetect2 objects. 
+    Previously it could handle only five option items, now it can handle any number of options, and printing does not have any problems.
+ 
+CopyDetect_1.0 (2012-10-02)
+
+  * initial release on CRAN

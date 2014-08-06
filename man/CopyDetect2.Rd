@@ -1,6 +1,6 @@
 \name{CopyDetect2}
 \alias{CopyDetect2}
-\title{Answer Copying Indices for Nominally Scored Items}
+\title{Answer Copying Indices for Nominal Response Items}
 \description{
 Computes the Omega index (Wollack, 1996), Generalized Binomial Test (van der Linden & Sotaridona (2006), K index (Holland, 1996), K1 and K2 indices (Sotaridona & Meijer, 2002), and S1 and S2 indices (Sotaridona & Meijer, 2003)
 }
@@ -104,6 +104,7 @@ Cengiz Zopluoglu
 
 
 \examples{
+
 data(simulated.data)
 head(simulated.data)
 str(simulated.data) #check that the variables are all "character"
@@ -143,9 +144,9 @@ ipar <- ipar[1:10,]
 		for(i in 1:replication){
 
 			x <- CopyDetect2(data=simulated.data,
-                       item.par=ipar,
-                       pair=c(pairs[i,1],pairs[i,2]),
-				options=c("A","B","C","D","E"))
+                                         item.par=ipar,
+                                         pair=c(pairs[i,1],pairs[i,2]),
+				         options=c("A","B","C","D","E"))
 
 			pairs[i,]$W=x$W.index$p.value
 			pairs[i,]$GBT=x$GBT.index$p.value
@@ -194,25 +195,25 @@ ipar <- ipar[1:10,]
 	for(i in 1:replication){ #Simulate answer copying for each answer copying pair
 
 		copy.items <- sample(1:ncol(simulated.data),5,replace=FALSE)
-		new.data[copy.pairs[i,1],]=new.data[copy.pairs[i,2],]
+		new.data[copy.pairs[i,1],copy.items]=new.data[copy.pairs[i,2],copy.items]
 	}
 
 	#Compute indices on the original response vectors 
 
 	copy.pairs$W1 	<- NA
-	copy.pairs$GBT1 	<- NA
+	copy.pairs$GBT1 <- NA
 	copy.pairs$K_1 	<- NA
-	copy.pairs$K1_1 	<- NA
+	copy.pairs$K1_1 <- NA
 	copy.pairs$K2_1	<- NA
-	copy.pairs$S1_1 	<- NA
-	copy.pairs$S2_1 	<- NA
+	copy.pairs$S1_1 <- NA
+	copy.pairs$S2_1 <- NA
 
 		for(i in 1:replication){
 
 			x <- CopyDetect2(data=simulated.data,
-                       item.par=ipar,
-                       pair=c(copy.pairs[i,1],copy.pairs[i,2]),
-				options=c("A","B","C","D","E"))
+                                         item.par=ipar,
+                                         pair=c(copy.pairs[i,1],copy.pairs[i,2]),
+				         options=c("A","B","C","D","E"))
 
 			copy.pairs[i,]$W1=x$W.index$p.value
 			copy.pairs[i,]$GBT1=x$GBT.index$p.value
@@ -228,19 +229,19 @@ ipar <- ipar[1:10,]
 
 	
 	copy.pairs$W2 	<- NA
-	copy.pairs$GBT2 	<- NA
+	copy.pairs$GBT2 <- NA
 	copy.pairs$K_2 	<- NA
-	copy.pairs$K1_2 	<- NA
+	copy.pairs$K1_2 <- NA
 	copy.pairs$K2_2	<- NA
-	copy.pairs$S1_2 	<- NA
-	copy.pairs$S2_2 	<- NA
+	copy.pairs$S1_2 <- NA
+	copy.pairs$S2_2 <- NA
 
 		for(i in 1:replication){
 
 			x <- CopyDetect2(data=new.data,
-                       item.par=ipar,
-                       pair=c(copy.pairs[i,1],copy.pairs[i,2]),
-				options=c("A","B","C","D","E"))
+                                         item.par=ipar,
+                                         pair=c(copy.pairs[i,1],copy.pairs[i,2]),
+				         options=c("A","B","C","D","E"))
 
 
 			copy.pairs[i,]$W2=x$W.index$p.value
@@ -256,6 +257,6 @@ ipar <- ipar[1:10,]
 	#See what happens!
 
 		print(copy.pairs,8)
-
+		
 }
 

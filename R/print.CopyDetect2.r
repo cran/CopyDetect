@@ -4,13 +4,15 @@ print.CopyDetect2<- function(x, ...){
 	cat("CopyDetect -- An R Package to Compute Statistical Indices for Detecting","\n")
 	cat("             ","Answer Copying on Multiple-Choice Tests","\n")
 	cat("","\n")
-	cat("Version 1.0  2012","\n")
+	cat("Version 1.1  2014","\n")
 	cat("","\n")
 	cat("Cengiz Zopluoglu","\n")
 	cat("","\n")
-	cat("University of Minnesota - Department of Educational Psychology","\n")
+	cat("Assistant Professor","\n")
+	cat("University of Miami - Department of Educational and Psychological Studies","\n")
+	cat("Research, Measurement, and Evaluation Program","\n")
 	cat("","\n")
-	cat("zoplu001@umn.edu","\n")
+	cat("c.zopluoglu@miami.edu","\n")
 	cat("*************************************************************************","\n")
 	cat("","\n")
 	cat("Processing Date: ",date(),"\n")
@@ -162,15 +164,15 @@ print.CopyDetect2<- function(x, ...){
 	cat("   Estimated Probabilities of Giving Response Options for Suspected Copier Examinee:","\n")
 	cat("","\n")
       cat("                                Examinee",x$suspected.pair[1],"\n")
-	cat("                 A","         B","         C","         D","         E","\n")
-	for(i in 1:ncol(x$data)) { cat(sprintf("%10s",paste("Item",i)),
-						 sprintf("%9.3f",x$GBT.index$probabilities1[i,1]),
-						 sprintf("%10.3f",x$GBT.index$probabilities1[i,2]),
-						 sprintf("%10.3f",x$GBT.index$probabilities1[i,3]),
-						 sprintf("%10.3f",x$GBT.index$probabilities1[i,4]),
-						 sprintf("%10.3f",x$GBT.index$probabilities1[i,5]),
-						 "\n") 
-                                }
+      cat("       ",sort(as.numeric(unique(x$key))),sep="          ","\n")
+
+	for(i in 1:ncol(x$data)) { 
+         oooo = c(sprintf("%10s",paste("Item",i)))
+             for(jjjj in 1:length(unique(x$key))) {
+                oooo = c(oooo,sprintf("%10.3f",x$GBT.index$probabilities1[i,jjjj]))
+             }
+         cat(oooo,"\n")
+      }	
 	cat("","\n")
 	cat("   Expected Number of Identical Responses = ",round(x$W.index$exp.match,3),"\n")
 	cat("","\n")

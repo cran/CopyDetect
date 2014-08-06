@@ -255,7 +255,7 @@ CopyDetect1 <- function(data,item.par=NULL,pair) { #Start Function
 			Qrs  <- (0:ncol(form))/ncol(form)
 			Qrs2 <- Qrs^2
 			Qrs3 <- 0:ncol(form)
-			mm <- round(sum(weight[wc,cm]),0)+m
+			mm <- sum(weight[wc+1,cm])+m
 				
 				pred1 <- predict(lm(pr~1+Qrs))
 				pred.1 <- c()
@@ -287,7 +287,7 @@ CopyDetect1 <- function(data,item.par=NULL,pair) { #Start Function
 				p1 <- pred.1[which(Qrs==qc)]
 				p2 <- pred.2[which(Qrs==qc)]
 				s1 <- pred.3[which(Qrs==qc)]
-				s2 <- round(pred.4[which(Qrs==qc)],0)
+				s2 <- pred.4[which(Qrs==qc)]
 
 
 			if(is.na(p1)!=TRUE & p1>=1)  { p1=.999 };if(is.na(p1)!=TRUE & p1<=0) { p1=.001 }

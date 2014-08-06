@@ -1,9 +1,7 @@
 \name{simulated.data}
 \alias{simulated.data}
 \docType{data}
-\title{
-Simulated Data based on Nominal Response IRT Model (Bock, 1972)
-}
+\title{Simulated Data Based on Nominal Response IRT Model (Bock, 1972) }
 \description{
 Data with 40 items is simulated based on the Nominal Response IRT Model (Bock, 1972). Each variable (column) represents an item and is a "character" variable. This is necessary to be able to run the \code{\link{CopyDetect2}} function. The items are assumed to have five response alternatives: A, B, C, D, and E. 
 

@@ -1,6 +1,6 @@
 \name{CopyDetect1}
 \alias{CopyDetect1}
-\title{Answer Copying Indices for Dichotomously Scored Items }
+\title{Anwer Copying Indices for Dcihotomously Scored Items}
 \description{
 Computes the Omega index (Wollack, 1996), Generalized Binomial Test ([GBT], van der Linden & Sotaridona (2006), K index (Holland, 1996), K1 and K2 indices (Sotaridona & Meijer, 2002), and S1 and S2 indices (Sotaridona & Meijer, 2003)
 }
@@ -217,7 +217,9 @@ Cengiz Zopluoglu
 
 		for(i in 1:k){
 
-			x <- CopyDetect1(data=responses,item.par=est.ipar, pair=c(pairs[i,1],pairs[i,2]))
+			x <- CopyDetect1(data=responses,
+                                         item.par=est.ipar, 
+                                         pair=c(pairs[i,1],pairs[i,2]))
 
 			pairs[i,]$W=x$W.index$p.value
 			pairs[i,]$GBT=x$GBT.index$p.value
@@ -268,22 +270,24 @@ Cengiz Zopluoglu
 	for(i in 1:5){ #Simulate answer copying for each answer copying pair
 
 		copy.items <- sample(1:n,10,replace=FALSE)
-		new.responses[copy.pairs[i,1],]=new.responses[copy.pairs[i,2],]
+		new.responses[copy.pairs[i,1],copy.items]=new.responses[copy.pairs[i,2],copy.items]
 	}
 
 	#Compute indices for pairs on the original response vectors 
 
 	copy.pairs$W1 	<- NA
-	copy.pairs$GBT1 	<- NA
+	copy.pairs$GBT1 <- NA
 	copy.pairs$K_1 	<- NA
-	copy.pairs$K1_1 	<- NA
+	copy.pairs$K1_1 <- NA
 	copy.pairs$K2_1	<- NA
-	copy.pairs$S1_1 	<- NA
-	copy.pairs$S2_1 	<- NA
+	copy.pairs$S1_1 <- NA
+	copy.pairs$S2_1 <- NA
 
 		for(i in 1:5){
 
-			x <- CopyDetect1(data=responses,item.par=est.ipar, pair=c(copy.pairs[i,1],copy.pairs[i,2]))
+			x <- CopyDetect1(data=responses,
+                                         item.par=est.ipar, 
+                                         pair=c(copy.pairs[i,1],copy.pairs[i,2]))
 
 			copy.pairs[i,]$W1=x$W.index$p.value
 			copy.pairs[i,]$GBT1=x$GBT.index$p.value
@@ -300,16 +304,18 @@ Cengiz Zopluoglu
 	est.ipar2 <- est(new.responses, model = "2PL", engine = "ltm")$est
 	
 	copy.pairs$W2 	<- NA
-	copy.pairs$GBT2 	<- NA
+	copy.pairs$GBT2 <- NA
 	copy.pairs$K_2 	<- NA
-	copy.pairs$K1_2 	<- NA
+	copy.pairs$K1_2 <- NA
 	copy.pairs$K2_2	<- NA
-	copy.pairs$S1_2 	<- NA
-	copy.pairs$S2_2 	<- NA
+	copy.pairs$S1_2 <- NA
+	copy.pairs$S2_2 <- NA
 
 		for(i in 1:5){
 
-			x <- CopyDetect1(data=new.responses, item.par=est.ipar2,pair=c(copy.pairs[i,1],copy.pairs[i,2]))
+			x <- CopyDetect1(data=new.responses, 
+                                         item.par=est.ipar2,
+                                         pair=c(copy.pairs[i,1],copy.pairs[i,2]))
 
 			copy.pairs[i,]$W2=x$W.index$p.value
 			copy.pairs[i,]$GBT2=x$GBT.index$p.value

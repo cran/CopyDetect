@@ -1,9 +1,7 @@
 \name{ipar}
 \alias{ipar}
 \docType{data}
-\title{
-The Nominal Response IRT Model Item Parameters
-}
+\title{Nominal Response Model Item Parameters}
 \description{
 The Nominal Response Model (NRM) item parameters are taken from Wollack's study (1996) and used to generate \code{\link{simulated.data}}.
 }
