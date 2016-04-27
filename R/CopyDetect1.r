@@ -255,7 +255,7 @@ CopyDetect1 <- function(data,item.par=NULL,pair) { #Start Function
 			Qrs  <- (0:ncol(form))/ncol(form)
 			Qrs2 <- Qrs^2
 			Qrs3 <- 0:ncol(form)
-			mm <- sum(weight[wc+1,cm])+m
+			mm <- ceiling(sum(weight[wc+1,cm]))+m
 				
 				pred1 <- predict(lm(pr~1+Qrs))
 				pred.1 <- c()
@@ -276,7 +276,7 @@ CopyDetect1 <- function(data,item.par=NULL,pair) { #Start Function
 					if(length(which(as.character(1:(ncol(form)+1))[i]==names(pred3)))!=0){
 						pred.3[i]=pred3[which(as.character(1:(ncol(form)+1))[i]==names(pred3))]} else pred.3[i]=NA
                         }
-				pred4 <- exp(predict(glm(ws*pr+pj ~ Qrs3 ,family=poisson())))
+				pred4 <- exp(predict(glm(ws*pr+ceiling(pj) ~ Qrs3 ,family=poisson())))
 				pred.4 <- c()
 				for(i in 1:(ncol(form)+1)){ 
 					if(length(which(as.character(1:(ncol(form)+1))[i]==names(pred4)))!=0){
@@ -296,8 +296,8 @@ CopyDetect1 <- function(data,item.par=NULL,pair) { #Start Function
 
 			if(is.na(p1)!=TRUE) { k1.index=1-pbinom(m-1,ws,p1) } else k1.index=NA
 			if(is.na(p2)!=TRUE) { k2.index=1-pbinom(m-1,ws,p2) } else k2.index=NA
-			if(is.na(s1)!=TRUE) { s1.index=1-ppois(m-1,s1)       } else s1.index=NA
-			if(is.na(s2)!=TRUE) { s2.index=1-ppois(mm-1,s2)      } else s2.index=NA
+			if(is.na(s1)!=TRUE) { s1.index=(1-ppois(m-1,s1)) - (1 - ppois(ws,s1))       } else s1.index=NA
+			if(is.na(s2)!=TRUE) { s2.index=(1-ppois(mm-1,s2)) - (1 - ppois(ncol(form),s2))      } else s2.index=NA
 
 
 		return(list(mean.iden.incorrect = pr*ws,

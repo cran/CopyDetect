@@ -4,7 +4,7 @@ print.CopyDetect<- function(x, ...){
 	cat("CopyDetect -- An R Package to Compute Statistical Indices for Detecting","\n")
 	cat("             ","Answer Copying on Multiple-Choice Tests","\n")
 	cat("","\n")
-	cat("Version 1.1  2014","\n")
+	cat("Version 1.2  2016","\n")
 	cat("","\n")
 	cat("Cengiz Zopluoglu","\n")
 	cat("","\n")

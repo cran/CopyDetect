@@ -1,4 +1,6 @@
-importFrom(irtoys, est)
+importFrom("irtoys","est","mlebme")
+importFrom("stats", "glm", "lm", "pbinom", "pnorm", "poisson", "ppois",
+     "predict")
 export(CopyDetect1,CopyDetect2)
 S3method(print,CopyDetect)
 S3method(print,CopyDetect2)
