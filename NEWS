@@ -1,4 +1,19 @@
-CopyDetect_1.2 (2014-08-06)
+CopyDetect_1.3 (2018-09-25)
+
+  * The names of the functions 'CopyDetect1' and 'CopyDetect2' are replaced as 'similarity1' and 'similarity2'.
+
+  * M4 index is added to the list of available response similarity indices
+  
+  * Instead of irtoys package, CopyDetect now relies on the mirt package for fitting various IRT models
+  
+  * As a result of using the mirt package, the package can also handle fitting the nominal response model. The user does not have to do this using another software and does not have to read the NRM item parameters into R. Package will handle everything.
+  
+  * Users have now flexibility of submitting a matrix including many pairs, so they can compute these indices for more than a single pair at one time.
+  
+  * Users have now flexibility of submitting a vector of center ids, assuming the data has a column indicating center IDs, to compute indices for all possible pairs in each test center.
+  
+
+CopyDetect_1.2 (2016-04-27)
 
   * A small computational adjustment for the S2 index is made
 

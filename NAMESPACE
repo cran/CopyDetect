@@ -1,6 +1,20 @@
-importFrom("irtoys","est","mlebme")
-importFrom("stats", "glm", "lm", "pbinom", "pnorm", "poisson", "ppois",
-     "predict")
-export(CopyDetect1,CopyDetect2)
+importFrom("mirt","mirt")
+importFrom("mirt","fscores")
+importFrom("mirt","coef")
+
+importFrom("stats", "glm")
+importFrom("stats", "lm")
+importFrom("stats", "pbinom")
+importFrom("stats", "pnorm")
+importFrom("stats", "poisson")
+importFrom("stats", "ppois")
+importFrom("stats", "predict")
+importFrom("stats", "na.omit")
+
+export(similarity1,similarity2)
 S3method(print,CopyDetect)
 S3method(print,CopyDetect2)
+S3method(print,CopyDetectMany)
+S3method(print,CopyDetectCenter)
+
+

@@ -1,10 +1,9 @@
 print.CopyDetect2<- function(x, ...){
 
 	cat("************************************************************************","\n")
-	cat("CopyDetect -- An R Package to Compute Statistical Indices for Detecting","\n")
-	cat("             ","Answer Copying on Multiple-Choice Tests","\n")
+	cat("CopyDetect - An R Package to Compute Response Similarity Indices for Multiple-Choice Tests","\n")
 	cat("","\n")
-	cat("Version 1.2  2016","\n")
+	cat("Version 1.3, released on October 2018","\n")
 	cat("","\n")
 	cat("Cengiz Zopluoglu","\n")
 	cat("","\n")
@@ -17,50 +16,48 @@ print.CopyDetect2<- function(x, ...){
 	cat("","\n")
 	cat("Processing Date: ",date(),"\n")
 	cat("","\n")
-	cat("                     Answer Key:",x$key,"\n")
+	cat("   Suspected Copier: Examinee ID",x$single.pair[1],"\n")
+	cat("      Response Vector:",sprintf(rep("%1.0f",ncol(x$data[,x$item.loc])),x$data[,x$item.loc][x$single.pair2[1],]),"\n")
+	cat("        Key Responses:",sprintf(rep("%1.0f",ncol(x$data[,x$item.loc])),x$key),"\n")
 	cat("","\n")
-	cat("   Suspected Copier: Examinee",x$suspected.pair[1],"\n")
-	cat("                Response Vector:",as.character(x$data[x$suspected.pair[1],]),"\n")
-	cat("         Scored Response Vector:",sprintf(rep("%1.0f",ncol(x$data)),x$scored.data[x$suspected.pair[1],]),"\n")
+	cat("   Suspected Source: Examinee ID",x$single.pair[2],"\n")
+	cat("      Response Vector:",sprintf(rep("%1.0f",ncol(x$data[,x$item.loc])),x$data[,x$item.loc][x$single.pair2[2],]),"\n")
+	cat("        Key Responses:",sprintf(rep("%1.0f",ncol(x$data[,x$item.loc])),x$key),"\n")
 	cat("","\n")
-	cat("   Suspected Source: Examinee",x$suspected.pair[2],"\n")
- 	cat("                Response Vector:",as.character(x$data[x$suspected.pair[2],]),"\n")
-	cat("         Scored Response Vector:",sprintf(rep("%1.0f",ncol(x$data)),x$scored.data[x$suspected.pair[2],]),"\n")
+	cat("   Number-Correct Score for Examinee ID",x$single.pair[1],":",sum(x$data[,x$item.loc][x$single.pair2[1],]==x$key,na.rm=TRUE),"\n")
+	cat("   Number-Correct Score for Examinee ID",x$single.pair[2],":",sum(x$data[,x$item.loc][x$single.pair2[2],]==x$key,na.rm=TRUE),"\n")
 	cat("","\n")
-	cat("   Number-Correct Score for Examinee",x$suspected.pair[1],":",rowSums(x$scored.data[x$suspected.pair[1],]),"\n")
-	cat("   Number-Correct Score for Examinee",x$suspected.pair[2],":",rowSums(x$scored.data[x$suspected.pair[2],]),"\n")
+	cat("   MLE Ability Estimate for Examinee ID",x$single.pair[1],":",round(x$thetas[x$single.pair2[1]],4),"\n")
+	cat("   MLE Ability Estimate for Examinee ID",x$single.pair[2],":",round(x$thetas[x$single.pair2[2]],4),"\n")
 	cat("","\n")
-	cat("   MLE Ability Estimate for Examinee",x$suspected.pair[1],":",round(x$theta.par[x$suspected.pair[1]],4),"\n")
-	cat("   MLE Ability Estimate for Examinee",x$suspected.pair[2],":",round(x$theta.par[x$suspected.pair[2]],4),"\n")
-	cat("","\n")
-	incorrect.items <- which(x$scored.data[x$suspected.pair[2],]==0)	
-	cat("   Number of Identical Incorrect Responses:",sprintf("%1.0f",length(which(x$data[x$suspected.pair[1],incorrect.items]==x$data[x$suspected.pair[2],incorrect.items]))),"\n")
-	cat("   Number of Identical Correct Responses:",sprintf("%1.0f",length(which(x$scored.data[x$suspected.pair[1],]== 1 & x$scored.data[x$suspected.pair[2],]==1))),"\n")
-	cat("   Number of Identical Responses:",sprintf("%1.0f",length(which(x$data[x$suspected.pair[1],]==x$data[x$suspected.pair[2],]))),"\n")
+	cat("   Number of Identical Incorrect Responses:",sprintf("%1.0f",sum((x$data[,x$item.loc][x$single.pair2[1],]==x$data[,x$item.loc][x$single.pair2[2],]) & (x$data[,x$item.loc][x$single.pair2[1],]!=x$key))),"\n")
+	cat("   Number of Identical Correct Responses:",sprintf("%1.0f",sum((x$data[,x$item.loc][x$single.pair2[1],]==x$data[,x$item.loc][x$single.pair2[2],]) & (x$data[,x$item.loc][x$single.pair2[1],]==x$key))),"\n")
+	cat("   Number of Identical Responses:",sprintf("%1.0f",x$W.index$obs.match),"\n")
 	cat("","\n")
 	cat("","\n")
 
-	if(is.null(x$W.index)!=TRUE) {
+	if(is.na(x$W.index$p.value)!=TRUE){
 
-		if(is.na(x$W.index$p.value)!=TRUE){
+		if(x$W.index$p.value<.05){  w05  <- "Flagged"} else w05  <- "Not Flagged"
+		if(x$W.index$p.value<.01){  w01  <- "Flagged"} else w01  <- "Not Flagged"
+		if(x$W.index$p.value<.001){ w001 <- "Flagged"} else w001 <- "Not Flagged"
+	} else { w05 <- "NA"; w01 <- "NA"; w001 <- "NA"}
 
-			if(x$W.index$p.value<.05){  w05  <- "Flagged"} else w05  <- "Not Flagged"
-			if(x$W.index$p.value<.01){  w01  <- "Flagged"} else w01  <- "Not Flagged"
-			if(x$W.index$p.value<.001){ w001 <- "Flagged"} else w001 <- "Not Flagged"
-		} else { w05 <- "NA"; w01 <- "NA"; w001 <- "NA"}
-	}
+	if(is.na(x$M4.index$p.value)!=TRUE){
 
-	if(is.null(x$GBT.index)!=TRUE) {
+		if(x$M4.index$p.value<.05){  m05  <- "Flagged"} else m05  <- "Not Flagged"
+		if(x$M4.index$p.value<.01){  m01  <- "Flagged"} else m01  <- "Not Flagged"
+		if(x$M4.index$p.value<.001){ m001 <- "Flagged"} else m001 <- "Not Flagged"
+	} else { m05 <- "NA"; m01 <- "NA"; m001 <- "NA"}
 
-		if(is.na(x$GBT.index$p.value)!=TRUE){
 
-			if(x$GBT.index$p.value<.05){  gbt05  <- "Flagged"} else gbt05  <- "Not Flagged"
-			if(x$GBT.index$p.value<.01){  gbt01  <- "Flagged"} else gbt01  <- "Not Flagged"
-			if(x$GBT.index$p.value<.001){ gbt001 <- "Flagged"} else gbt001 <- "Not Flagged"
+	if(is.na(x$GBT.index$p.value)!=TRUE){
 
-		} else { gbt05 <- "NA"; gbt01 <- "NA"; gbt001 <- "NA"}
+		if(x$GBT.index$p.value<.05){  gbt05  <- "Flagged"} else gbt05  <- "Not Flagged"
+		if(x$GBT.index$p.value<.01){  gbt01  <- "Flagged"} else gbt01  <- "Not Flagged"
+		if(x$GBT.index$p.value<.001){ gbt001 <- "Flagged"} else gbt001 <- "Not Flagged"
 
-	}
+	} else { gbt05 <- "NA"; gbt01 <- "NA"; gbt001 <- "NA"}
 
       if(is.null(x$K.index)!=TRUE) {
 
@@ -126,6 +123,11 @@ print.CopyDetect2<- function(x, ...){
 	    sprintf("%15s",w01),
 	    sprintf("%15s",w001),"\n")	
 
+	cat(sprintf("%18s","M4"),
+	    sprintf("%14s",m05),
+	    sprintf("%15s",m01),
+	    sprintf("%15s",m001),"\n")
+
 	cat(sprintf("%18s","GBT"),
 	    sprintf("%14s",gbt05),
 	    sprintf("%15s",gbt01),
@@ -159,14 +161,13 @@ print.CopyDetect2<- function(x, ...){
 	cat("","\n")
 	cat("","\n")
 	cat("*******************************","          W Index          ","*********************************","\n")
- if(is.null(x$W.index)!=TRUE) {
-      cat("","\n")
+  	cat("","\n")
 	cat("   Estimated Probabilities of Giving Response Options for Suspected Copier Examinee:","\n")
 	cat("","\n")
-      cat("                                Examinee",x$suspected.pair[1],"\n")
+      cat("                                Examinee ID",x$single.pair[1],"\n")
       cat("       ",sort(as.numeric(unique(x$key))),sep="          ","\n")
 
-	for(i in 1:ncol(x$data)) { 
+	for(i in 1:ncol(x$data[,x$item.loc])) { 
          oooo = c(sprintf("%10s",paste("Item",i)))
              for(jjjj in 1:length(unique(x$key))) {
                 oooo = c(oooo,sprintf("%10.3f",x$GBT.index$probabilities1[i,jjjj]))
@@ -183,43 +184,38 @@ print.CopyDetect2<- function(x, ...){
 	cat("","\n")
 	cat("   Likelihood of Agreemet (p-value)","=",round(x$W.index$p.value,5),"\n")	
 	cat("","\n")
-} else cat("Nominal Response Model item parameters are not provided")
-	cat("","\n")
 	cat("**********************","          Generalized Binomial Test          ","************************","\n")
- if(is.null(x$GBT.index)!=TRUE) {
 	cat("","\n")
 	cat("   Probability of Matching on Each Item:","\n")
 	cat("","\n")
-	for(i in 1:ncol(x$data)) { cat(sprintf("%15s",paste("Item",i)),
+	for(i in 1:ncol(x$data[,x$item.loc])) { cat(sprintf("%15s",paste("Item",i)),
 						 sprintf("%12.3f",x$GBT$prob.match[i]),
  				             "\n") 
                                 }
 	cat("","\n")
 	cat("   Exact Probability Distribution for Number of Matches:","\n")
 	cat("","\n")
-	for(i in 1:(ncol(x$data)+1)) { cat(sprintf("%30s",paste("Probability of ",i-1," Match",sep="")),
+	for(i in 1:(ncol(x$data[,x$item.loc])+1)) { cat(sprintf("%30s",paste("Probability of ",i-1," Match",sep="")),
 						 sprintf("%12.3f",
                                      as.numeric(as.matrix(x$GBT$exact.prob.dist)[i,2])),
  				             "\n") 
                                 }
 	cat("","\n")
 	cat(paste("   Probability of Observing ",
-                length(which(x$data[x$suspected.pair[1],]==x$data[x$suspected.pair[2],]))," or More Matches = ",
+                length(which(x$data[,x$item.loc][x$single.pair2[1],]==x$data[,x$item.loc][x$single.pair2[2],]))," or More Matches = ",
                 round(x$GBT$p.value,5),sep=""),"\n")
-	cat("","\n")
-} else cat("Nominal Response Model item parameters are not provided")
 	cat("","\n")
 	cat("***************************","          K Index          ","*******************************","\n")
 	cat("","\n")
  if(is.null(x$K.index)!=TRUE) {
-	cat("   Number-Incorrect Score for Examinee",x$suspected.pair[1],"(suspected copier):",
-      ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],]),"\n")
+	cat("   Number-Incorrect Score for Examinee ID",x$single.pair[1],"(suspected copier):",
+      ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],]),"\n")
 	cat("","\n")
-	cat("   Number-Incorrect Score for Examinee",x$suspected.pair[2],"(suspected source):",
-              ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]),"\n")
+	cat("   Number-Incorrect Score for Examinee ID",x$single.pair[2],"(suspected source):",
+              ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]),"\n")
 	cat("","\n")
       cat("   Number of Examinees in the Subgroup of","\n") 
-	cat("   Number-Incorrect Score",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],]),":",
+	cat("   Number-Incorrect Score",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],]),":",
          length(x$K.index$subgroups)
          ,"\n")
 	cat("","\n")
@@ -255,11 +251,12 @@ print.CopyDetect2<- function(x, ...){
 	  cat("   with Source Examinee for This Number-Incorrect Subgroup:","\n") 
 	  cat("","\n")
 	  cat("      ",round(mean(x$K.index$emp.agg,na.rm=TRUE),4),
-          "/",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]),"=",
+          "/",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]),"=",
 	    round(round(mean(x$K.index$emp.agg,na.rm=TRUE),4)/
-	    (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],])),4),"\n")
+	    (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],])),4),"\n")
 	  cat("","\n")
-	  cat("   Probability of Observing",length(which(x$data[x$suspected.pair[1],incorrect.items]==x$data[x$suspected.pair[2],incorrect.items])),
+	  incorrect.items <- which(x$scored.data[x$single.pair2[2],]==0)	
+	  cat("   Probability of Observing",length(which(x$data[,x$item.loc][x$single.pair2[1],incorrect.items]==x$data[,x$item.loc][x$single.pair2[2],incorrect.items])),
             "or More Identical Incorrect","\n") 
 	  cat("   Matches Using Binomial Distribution =",round(x$K.index$k.index,4),"\n") 
 	  cat("","\n")
@@ -297,7 +294,7 @@ print.CopyDetect2<- function(x, ...){
                    sprintf("%8s","Model"),
                    sprintf("%10s","Model"),"\n")
 	cat("","\n")
-	for(i in 1:(ncol(x$data)+1)) { 
+	for(i in 1:(ncol(x$data[,x$item.loc])+1)) { 
 			
 		cat(sprintf("%7.0f",i-1),
                 sprintf("%13.0f",length(x$K.variants$subgroups[[i]])),
@@ -307,74 +304,74 @@ print.CopyDetect2<- function(x, ...){
                 sprintf("%10.3f",x$K.variants$pred3[i]),"\n")
 	}
 	cat("","\n")
-	cat("   Number-Incorrect Score for Examinee",x$suspected.pair[1],":",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],]),"\n")
+	cat("   Number-Incorrect Score for Examinee",x$single.pair2[1],":",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],]),"\n")
 	cat("","\n")
-	cat("   Number-Incorrect Score for Examinee",x$suspected.pair[2],":",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]),"\n")
+	cat("   Number-Incorrect Score for Examinee",x$single.pair2[2],":",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]),"\n")
 	cat("","\n")
 	cat("   Binomial Probability of Matching on an Identical Incorrect Response","\n") 
-	cat("   with Source Examinee for Number-Incorrect Subgroup",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],]),":","\n") 
+	cat("   with Source Examinee for Number-Incorrect Subgroup",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],]),":","\n") 
       cat("","\n")
 
-	if(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]<
-	   (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],])) &
-	   x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]>0
+	if(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]<
+	   (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],])) &
+	   x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]>0
          ){
 
 	cat("              ","for K1 index:",
-                            round(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)],3),
-				    "/",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]),"=",
-				   round((x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)])/
-				   (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],])),3),"\n")
+                            round(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)],3),
+				    "/",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]),"=",
+				   round((x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)])/
+				   (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],])),3),"\n")
 	} else 
-		if(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]>
-	         (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]))){   
+		if(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]>
+	         (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]))){   
                   cat("              ","for K1 index is set to .999, because predicted value was higher than 1","\n")
             } else
-		   if(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]<=0){
+		   if(x$K.variants$pred1[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]<=0){
 	                   cat("              ","for K1 index is set to .001, because predicted value was smaller than 0","\n")
                }
 
 	cat("","\n")
 
-	if(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]<
-	   (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],])) &
-	   x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]>0
+	if(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]<
+	   (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],])) &
+	   x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]>0
          ){
 
 	    cat("              ","for K2 index:",
-                            round(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)],3),
-				    "/",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]),"=",
-				   round((x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)])/
-				   (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],])),3),"\n")
+                            round(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)],3),
+				    "/",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]),"=",
+				   round((x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)])/
+				   (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],])),3),"\n")
 	  } else 
-		if(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]>
-	         (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]))){   
+		if(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]>
+	         (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]))){   
                   cat("              ","for K2 index is set to .999, because predicted value was higher than 1","\n")
             } else
-		   if(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]<=0){
+		   if(x$K.variants$pred2[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]<=0){
 	                   cat("              ","for K2 index is set to .001, because predicted value was smaller than 0","\n")
                }
 
 	cat("","\n")
 
-	if(x$K.variants$pred3[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]<
-	   (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]))
+	if(x$K.variants$pred3[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]<
+	   (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]))
          ){
 
 	cat("   Predicted Average Number of Identical Incorrect Response","\n") 
-	cat("   with Source Examinee for Number-Incorrect Subgroup",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],]),"\n")  
+	cat("   with Source Examinee for Number-Incorrect Subgroup",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],]),"\n")  
 	cat("   (parameter to be used for S1 index in Poisson Distribution):          ",
-      round(x$K.variants$pred3[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)],3),
+      round(x$K.variants$pred3[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)],3),
       "\n")
 	} else 
-		if(x$K.variants$pred3[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]>
-	         (ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]))){   
+		if(x$K.variants$pred3[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]>
+	         (ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]))){   
                   cat("   Predicted average number of identical incoccrect response is set to",
-                  ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[2],]),"\n")
+                  ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[2],]),"\n")
                   cat("   ,the maximum possible number of incorrect matches, for S1 index.","\n")
             }
 	cat("","\n")
-	cat("   Probability of Observing",length(which(x$data[x$suspected.pair[1],incorrect.items]==x$data[x$suspected.pair[2],incorrect.items])),
+	cat("   Probability of Observing",length(which(x$data[x$single.pair2[1],incorrect.items]==x$data[x$single.pair2[2],incorrect.items])),
           "or More Identical Incorrect","\n") 
 	cat("   Matches Using Binomial Distribution","\n") 
 	cat("","\n")
@@ -382,7 +379,7 @@ print.CopyDetect2<- function(x, ...){
 	cat("","\n")
 	cat("     ","--- K2 index p value:",round(x$K.variants$K2.index,3),"\n")
 	cat("","\n")
-	cat("   Probability of Observing",length(which(x$data[x$suspected.pair[1],incorrect.items]==x$data[x$suspected.pair[2],incorrect.items])),
+	cat("   Probability of Observing",length(which(x$data[x$single.pair2[1],incorrect.items]==x$data[x$single.pair2[2],incorrect.items])),
           "or More Identical Incorrect","\n") 
 	cat("   Matches Using Poisson Distribution","\n") 
 	cat("","\n")
@@ -394,7 +391,7 @@ print.CopyDetect2<- function(x, ...){
 	cat("***************************","    S2 Index         ","*******************************","\n")
 	cat("","\n")
 
- if(is.null(x$K.variants)!=TRUE) {
+ if(is.null(x$K.variants)!=TRUE & is.na(x$K.variants$S2.index)!=TRUE) {
 
 	cat(		 sprintf("%6s","Number"),"\n")
 	cat(		 sprintf("%8s","Incorrect"),
@@ -413,7 +410,7 @@ print.CopyDetect2<- function(x, ...){
 	
 
 	cat("","\n")
-	for(i in 1:(ncol(x$data)+1)) { 
+	for(i in 1:(ncol(x$data[,x$item.loc])+1)) { 
 			
 		cat(sprintf("%7.0f",i-1),
                 sprintf("%13.0f",length(x$K.variants$subgroups[[i]])),
@@ -431,23 +428,23 @@ print.CopyDetect2<- function(x, ...){
       cat(		 sprintf("%17s","Score Group"),
                    sprintf("%14s","Values"),"\n")
 	cat("","\n")
-	for(i in 1:(ncol(x$data)+1)) { 
+	for(i in 1:(ncol(x$data[,x$item.loc])+1)) { 
 			
 		cat(sprintf("%13.0f",i-1),
                 sprintf("%19.3f",x$K.variants$pred4[i]),
                 "\n")
 	}
 	cat("","\n")
-	if(x$K.variants$pred4[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]<
+	if(x$K.variants$pred4[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]<
 	   ncol(x$data)
          ){
 
 	cat("   Predicted Average Number of Identical Response","\n") 
-	cat("   with Source Examinee for Number-Incorrect Subgroup",ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],]),
-	    ":",round(x$K.variants$pred4[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)],0),
+	cat("   with Source Examinee for Number-Incorrect Subgroup",ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],]),
+	    ":",round(x$K.variants$pred4[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)],0),
 	"(rounded to the nearest integer)","\n")
 	} else 
-		if(x$K.variants$pred4[(ncol(x$scored.data)-rowSums(x$scored.data[x$suspected.pair[1],])+1)]>
+		if(x$K.variants$pred4[(ncol(x$scored.data)-rowSums(x$scored.data[x$single.pair2[1],])+1)]>
 	         ncol(x$data)
                ){   
                   cat("   Predicted average number of identical response is set to",
@@ -458,6 +455,13 @@ print.CopyDetect2<- function(x, ...){
 	cat("S2 index p value:",round(x$K.variants$S2.index,3),"\n")
 } else cat("")
 
+	cat("***************************","    M4 Index         ","*******************************","\n")
+	cat("","\n")
+	cat("The detailed results for the M4 index is not printed here due to a large size of matrix ","\n")
+	cat("for the exact probability distribution. Please type 'x$M4.index$exact.prob.dist' where 'x' ","\n")
+	cat("should be replaced with the object name you assign for the results of the function.","\n")
+	cat("","\n")
+	cat("M4 index p value:",round(x$M4.index$p.value,3),"\n")
 }
 
 
